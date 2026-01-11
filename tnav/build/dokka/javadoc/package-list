@@ -1,0 +1,8 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:com.kajinl.tnav/NavIntent.Back///PointingToDeclaration/com/kajinl/tnav/NavIntent.Back.html
+$dokka.location:com.kajinl.tnav/NavIntent.OffAllTo///PointingToDeclaration/com/kajinl/tnav/NavIntent.OffAllTo.html
+$dokka.location:com.kajinl.tnav/NavIntent.Replace///PointingToDeclaration/com/kajinl/tnav/NavIntent.Replace.html
+$dokka.location:com.kajinl.tnav/NavIntent.To///PointingToDeclaration/com/kajinl/tnav/NavIntent.To.html
+com.kajinl.tnav
+

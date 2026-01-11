@@ -1,0 +1,145 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.kajlee",
+    "module": "tnav",
+    "version": "0.0.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.13"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.navigation",
+          "module": "navigation-compose",
+          "version": {
+            "requires": "2.8.4"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tnav-0.0.1.aar",
+          "url": "tnav-0.0.1.aar",
+          "size": 49250,
+          "sha512": "916f50a4f79cdece7483dc96910918c341c80493df1f547ecd4ba2701f933cc2bd35d16a6d7d4e534cf63a8662ebc1633ea81d9682aad53054e5349bcbd7a6d0",
+          "sha256": "88e4a2273691482e45d8b352cbb7fd6277c4879a960b3547d66efb58c07ffa9c",
+          "sha1": "ceb48a0df629f032c90862355a153d8eb05bf16b",
+          "md5": "f43640b7ed5ee89dad70e6824d1bc072"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.10.1"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-runtime-ktx",
+          "version": {
+            "requires": "2.9.4"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel-savedstate",
+          "version": {
+            "requires": "2.9.4"
+          }
+        },
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2024.09.00"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "androidx.navigation",
+          "module": "navigation-compose",
+          "version": {
+            "requires": "2.8.4"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "tnav-0.0.1.aar",
+          "url": "tnav-0.0.1.aar",
+          "size": 49250,
+          "sha512": "916f50a4f79cdece7483dc96910918c341c80493df1f547ecd4ba2701f933cc2bd35d16a6d7d4e534cf63a8662ebc1633ea81d9682aad53054e5349bcbd7a6d0",
+          "sha256": "88e4a2273691482e45d8b352cbb7fd6277c4879a960b3547d66efb58c07ffa9c",
+          "sha1": "ceb48a0df629f032c90862355a153d8eb05bf16b",
+          "md5": "f43640b7ed5ee89dad70e6824d1bc072"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseSourcePublication",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "tnav-0.0.1-sources.jar",
+          "url": "tnav-0.0.1-sources.jar",
+          "size": 8718,
+          "sha512": "43e6b2ce802078a2363b316203b5063db541a57222292aedd84278e7c8786e4e44b543f6e5a36bb0ca784730e637fa37da95ab674b5e849b53f986391a2d33ab",
+          "sha256": "890ed97858d0c823519b6fa4feed0f9004a2b3653265d5793457f088f30a9170",
+          "sha1": "f6437d583d2d382d51ecb81e8cafcfd00db31930",
+          "md5": "c0c0160672930afdb3053c3bad543252"
+        }
+      ]
+    }
+  ]
+}
