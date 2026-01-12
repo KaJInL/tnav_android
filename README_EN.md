@@ -3,23 +3,23 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.kajlee/tnav)](https://central.sonatype.com/artifact/com.kajlee/tnav)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
-[English](README_EN.md) | 中文
+English | [中文](README.md)
 
-一个基于 Jetpack Compose Navigation 的 Android 导航库，提供类型安全、无序列化开销的页面导航解决方案。
+An Android navigation library based on Jetpack Compose Navigation, providing a type-safe, zero-serialization-overhead page navigation solution.
 
-## ✨ 特性
+## ✨ Features
 
-- ✅ **无序列化开销**：参数直接存储在内存中，无需 JSON 序列化/反序列化
-- ✅ **类型安全**：使用 Kotlin 泛型确保类型安全
-- ✅ **简洁 API**：页面无需传递 `NavBackStackEntry` 参数
-- ✅ **支持任意对象**：可以传递任何 Kotlin 对象，包括 sealed class、Lambda 等
-- ✅ **自动内存管理**：页面销毁时自动清理参数，无需手动管理
-- ✅ **丰富的动画效果**：提供多种预设动画，支持自定义动画
-- ✅ **返回结果支持**：支持页面返回时携带结果数据
+- ✅ **Zero Serialization Overhead**: Parameters are stored directly in memory, no JSON serialization/deserialization required
+- ✅ **Type Safety**: Uses Kotlin generics to ensure type safety
+- ✅ **Concise API**: Pages don't need to pass `NavBackStackEntry` parameters
+- ✅ **Support for Any Object**: Can pass any Kotlin object, including sealed classes, Lambdas, etc.
+- ✅ **Automatic Memory Management**: Parameters are automatically cleaned up when pages are destroyed, no manual management needed
+- ✅ **Rich Animation Effects**: Provides multiple preset animations with support for custom animations
+- ✅ **Return Result Support**: Supports returning result data when navigating back
 
-## 📦 安装
+## 📦 Installation
 
-在 `build.gradle.kts` 中添加依赖：
+Add the dependency in `build.gradle.kts`:
 
 ```kotlin
 dependencies {
@@ -27,7 +27,7 @@ dependencies {
 }
 ```
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
 ```kotlin
 import com.kajlee.tnav.Destination
@@ -35,14 +35,14 @@ import com.kajlee.tnav.Nav
 import com.kajlee.tnav.NavigationEffect
 import com.kajlee.tnav.composableWithDestination
 
-// 1. 定义路由
+// 1. Define routes
 object GlobalDes {
     object Splash : Destination("Splash")
     object Main : Destination("Main")
     object Login : Destination("Login")
 }
 
-// 2. 注册路由
+// 2. Register routes
 fun NavGraphBuilder.registerGlobalRoute() {
     composableWithDestination(GlobalDes.Splash) {
         SplashScreen()
@@ -57,7 +57,7 @@ fun NavGraphBuilder.registerGlobalRoute() {
     }
 }
 
-// 3. 设置导航入口
+// 3. Setup navigation entry
 @Composable
 fun NavigationScreen() {
     NavigationEffect(startDestination = GlobalDes.Splash.route) {
@@ -65,89 +65,89 @@ fun NavigationScreen() {
     }
 }
 
-// 4. 页面跳转
+// 4. Navigate to page
 Nav.to(GlobalDes.Login)
 
-// 5. 返回上一页
+// 5. Navigate back
 Nav.back()
 ```
 
-## 📖 功能使用
+## 📖 Usage
 
-### 基础导航
+### Basic Navigation
 
-#### 简单跳转
+#### Simple Navigation
 
 ```kotlin
-// 跳转到登录页
+// Navigate to login page
 Nav.to(GlobalDes.Login)
 
-// 返回上一页
+// Navigate back
 Nav.back()
 ```
 
-#### 带参数跳转
+#### Navigation with Parameters
 
 ```kotlin
-// 定义参数类
+// Define parameter class
 data class UserInfo(
     val id: String,
     val name: String,
     val age: Int
 )
 
-// 跳转时传递参数
-val userInfo = UserInfo("001", "张三", 25)
+// Pass parameters when navigating
+val userInfo = UserInfo("001", "John", 25)
 Nav.to(GlobalDes.UserDetail, params = userInfo)
 
-// 在目标页面获取参数
+// Get parameters in target page
 @Composable
 fun UserDetailScreen() {
     val userInfo = Nav.getParams<UserInfo>()
     
     if (userInfo != null) {
-        Text("用户: ${userInfo.name}")
+        Text("User: ${userInfo.name}")
     }
 }
 ```
 
-#### 替换当前页面
+#### Replace Current Page
 
 ```kotlin
-// 替换当前页面（移除当前页面，导航到新页面）
-// 适用于登录后跳转到主页等场景
+// Replace current page (remove current page, navigate to new page)
+// Suitable for scenarios like navigating to home page after login
 Nav.replace(GlobalDes.Main)
 ```
 
-#### 清空栈并跳转
+#### Clear Stack and Navigate
 
 ```kotlin
-// 清空所有页面，跳转到登录页
-// 适用于退出登录等场景
+// Clear all pages and navigate to login page
+// Suitable for scenarios like logout
 Nav.offAllTo(GlobalDes.Login)
 ```
 
-#### 返回到指定页面
+#### Navigate Back to Specific Page
 
 ```kotlin
-// 返回到指定页面（不包含目标页面）
+// Navigate back to specific page (excluding target page)
 Nav.back(destination = GlobalDes.Main, inclusive = false)
 
-// 返回到指定页面（包含目标页面）
+// Navigate back to specific page (including target page)
 Nav.back(destination = GlobalDes.Main, inclusive = true)
 ```
 
-#### 跳转并弹出到指定页面
+#### Navigate and Pop Up to Specific Page
 
 ```kotlin
-// 跳转到详情页，并弹出到首页（不包含首页）
+// Navigate to detail page and pop up to home page (excluding home page)
 Nav.to(
     destination = GlobalDes.Detail,
     popUpToRoute = GlobalDes.Main.route,
     inclusive = false
 )
 
-// 跳转到详情页，并弹出到首页（包含首页）
+// Navigate to detail page and pop up to home page (including home page)
 Nav.to(
     destination = GlobalDes.Detail,
     popUpToRoute = GlobalDes.Main.route,
@@ -155,35 +155,35 @@ Nav.to(
 )
 ```
 
-#### 单例模式
+#### Single Top Mode
 
 ```kotlin
-// 如果栈中已存在该页面，则复用，不创建新实例
-// 适用于避免重复创建相同页面的场景
+// If the page already exists in the stack, reuse it instead of creating a new instance
+// Suitable for scenarios to avoid creating duplicate pages
 Nav.to(GlobalDes.Main, isSingleTop = true)
 ```
 
-### 参数传递
+### Parameter Passing
 
-#### 基本对象传递
+#### Basic Object Passing
 
 ```kotlin
-// 传递 data class
+// Pass data class
 data class UserInfo(val id: String, val name: String)
-Nav.to(GlobalDes.UserDetail, params = UserInfo("001", "张三"))
+Nav.to(GlobalDes.UserDetail, params = UserInfo("001", "John"))
 
-// 接收参数
+// Receive parameters
 @Composable
 fun UserDetailScreen() {
     val userInfo = Nav.getParams<UserInfo>()
-    // 使用 userInfo...
+    // Use userInfo...
 }
 ```
 
-#### 复杂对象传递
+#### Complex Object Passing
 
 ```kotlin
-// 传递包含 List、Map、嵌套对象的复杂数据
+// Pass complex data containing List, Map, nested objects
 data class ComplexData(
     val items: List<String>,
     val metadata: Map<String, String>,
@@ -200,32 +200,32 @@ val complexData = ComplexData(
 
 Nav.to(GlobalDes.ComplexDemo, params = complexData)
 
-// 接收复杂对象
+// Receive complex object
 @Composable
 fun ComplexDemoScreen() {
     val complexData = Nav.getParams<ComplexData>()
-    // 直接使用，无需序列化
+    // Use directly, no serialization needed
     complexData?.items?.forEach { item ->
         Text(item)
     }
 }
 ```
 
-#### Sealed Class 传递
+#### Sealed Class Passing
 
 ```kotlin
-// 定义 Sealed Class
+// Define Sealed Class
 sealed class PageState {
     data object Loading : PageState()
     data class Success(val message: String) : PageState()
     data class Error(val errorMessage: String) : PageState()
 }
 
-// 传递 Sealed Class
-val state = PageState.Success("操作成功")
+// Pass Sealed Class
+val state = PageState.Success("Operation successful")
 Nav.to(GlobalDes.Result, params = state)
 
-// 接收 Sealed Class
+// Receive Sealed Class
 @Composable
 fun ResultScreen() {
     val state = Nav.getParams<PageState>()
@@ -233,58 +233,58 @@ fun ResultScreen() {
         is PageState.Loading -> { /* ... */ }
         is PageState.Success -> { /* ... */ }
         is PageState.Error -> { /* ... */ }
-        null -> { /* 未接收到数据 */ }
+        null -> { /* No data received */ }
     }
 }
 ```
 
-### 返回结果
+### Return Results
 
 ```kotlin
-// ========== 步骤1: 定义结果数据类 ==========
+// ========== Step 1: Define result data class ==========
 data class SelectResult(
     val selectedId: String,
     val selectedName: String
 )
 
-// ========== 步骤2: 在调用页面导航并获取结果 ==========
+// ========== Step 2: Navigate and get result in calling page ==========
 @Composable
 fun MainScreen() {
-    // 导航到选择页面
+    // Navigate to selection page
     Button(onClick = { Nav.to(GlobalDes.SelectionList) }) {
-        Text("去选择")
+        Text("Go to Selection")
     }
     
-    // 获取选择页面的返回结果（自动监听变化）
+    // Get return result from selection page (automatically observes changes)
     val result = Nav.getResultFor<SelectResult>(GlobalDes.SelectionList)
     
-    // 显示选择的结果
+    // Display selected result
     result?.let {
-        Text("已选择: ${it.selectedName}")
+        Text("Selected: ${it.selectedName}")
     }
 }
 
-// ========== 步骤3: 在目标页面返回结果 ==========
+// ========== Step 3: Return result in target page ==========
 @Composable
 fun SelectionListScreen() {
     Card(onClick = {
-        // 返回并携带结果
-        val result = SelectResult("001", "选项一")
+        // Return with result
+        val result = SelectResult("001", "Option One")
         Nav.back(result = result)
     }) {
-        Text("选项一")
+        Text("Option One")
     }
 }
 ```
 
-### 动画效果
+### Animation Effects
 
-#### 使用预设动画
+#### Using Preset Animations
 
-TNav 提供了 11 种预设动画效果，使用非常简单：
+TNav provides 11 preset animation effects, very easy to use:
 
 ```kotlin
-// 使用弹性缩放动画
+// Use elastic scale animation
 composableWithDestination(
     destination = GlobalDes.Detail,
     transitions = NavTransitions.Elastic
@@ -292,7 +292,7 @@ composableWithDestination(
     DetailScreen()
 }
 
-// 使用淡入淡出动画
+// Use fade animation
 composableWithDestination(
     destination = GlobalDes.Login,
     transitions = NavTransitions.Fade
@@ -300,7 +300,7 @@ composableWithDestination(
     LoginScreen()
 }
 
-// 使用缩放动画
+// Use scale animation
 composableWithDestination(
     destination = GlobalDes.Profile,
     transitions = NavTransitions.Scale
@@ -309,44 +309,44 @@ composableWithDestination(
 }
 ```
 
-#### 可用的预设动画
+#### Available Preset Animations
 
-| 动画名称 | 效果描述 | 适用场景 |
-|---------|---------|---------|
-| `NavTransitions.Default` | 水平滑动（默认） | 通用场景 |
-| `NavTransitions.Fade` | 淡入淡出 | 轻量级过渡 |
-| `NavTransitions.Scale` | 缩放+淡入淡出 | 弹窗、详情页 |
-| `NavTransitions.SlideVertical` | 垂直滑动 | 底部弹窗、列表展开 |
-| `NavTransitions.Elastic` | 弹性缩放 | 强调、重要页面 |
-| `NavTransitions.SlideFade` | 滑动+淡入淡出 | 流畅过渡 |
-| `NavTransitions.ScaleSlide` | 缩放+滑动组合 | 丰富视觉效果 |
-| `NavTransitions.BottomSheet` | 从底部弹出 | 底部弹窗、抽屉 |
-| `NavTransitions.RotateScale` | 旋转+缩放 | 特殊效果页面 |
-| `NavTransitions.QuickFade` | 快速淡入淡出 | 快速切换 |
-| `NavTransitions.None` | 无动画 | 性能优化场景 |
+| Animation Name | Effect Description | Use Case |
+|---------------|-------------------|----------|
+| `NavTransitions.Default` | Horizontal slide (default) | General scenarios |
+| `NavTransitions.Fade` | Fade in/out | Lightweight transitions |
+| `NavTransitions.Scale` | Scale + fade | Dialogs, detail pages |
+| `NavTransitions.SlideVertical` | Vertical slide | Bottom sheets, list expansion |
+| `NavTransitions.Elastic` | Elastic scale | Emphasis, important pages |
+| `NavTransitions.SlideFade` | Slide + fade | Smooth transitions |
+| `NavTransitions.ScaleSlide` | Scale + slide combination | Rich visual effects |
+| `NavTransitions.BottomSheet` | Pop from bottom | Bottom sheets, drawers |
+| `NavTransitions.RotateScale` | Rotate + scale | Special effect pages |
+| `NavTransitions.QuickFade` | Quick fade | Fast switching |
+| `NavTransitions.None` | No animation | Performance optimization scenarios |
 
-### 对话框导航
+### Dialog Navigation
 
 ```kotlin
-// 注册对话框路由
+// Register dialog route
 fun NavGraphBuilder.registerDialogRoute() {
     dialogWithDestination(GlobalDes.ConfirmDialog) {
         ConfirmDialogScreen()
     }
 }
 
-// 打开对话框
+// Open dialog
 Nav.to(GlobalDes.ConfirmDialog)
 
-// 关闭对话框
+// Close dialog
 Nav.back()
 ```
 
-## 🔧 定制化
+## 🔧 Customization
 
-### 自定义动画
+### Custom Animation
 
-如果需要完全自定义动画，可以使用原始 API：
+If you need to fully customize animations, you can use the raw API:
 
 ```kotlin
 import androidx.compose.animation.fadeIn
@@ -366,9 +366,9 @@ composableWithDestination(
 }
 ```
 
-### 创建自定义动画配置
+### Create Custom Animation Configuration
 
-你也可以创建自己的动画配置：
+You can also create your own animation configuration:
 
 ```kotlin
 val myCustomTransition = TransitionConfig(
@@ -398,7 +398,7 @@ val myCustomTransition = TransitionConfig(
     }
 )
 
-// 使用自定义动画
+// Use custom animation
 composableWithDestination(
     destination = GlobalDes.Detail,
     transitions = myCustomTransition
@@ -407,7 +407,7 @@ composableWithDestination(
 }
 ```
 
-### 深链接支持
+### Deep Link Support
 
 ```kotlin
 composableWithDestination(
@@ -422,28 +422,28 @@ composableWithDestination(
 }
 ```
 
-## 📚 API 参考
+## 📚 API Reference
 
-### Nav 对象
+### Nav Object
 
-| 方法 | 说明 |
-|------|------|
-| `Nav.to()` | 导航到指定页面 |
-| `Nav.back()` | 返回上一页 |
-| `Nav.replace()` | 替换当前页面 |
-| `Nav.offAllTo()` | 清空栈并跳转 |
-| `Nav.getParams<T>()` | 获取当前页面参数（Composable） |
-| `Nav.getResultFor<T>(destination)` | 获取指定页面的返回结果（Composable） |
-| `Nav.clearCurrentData()` | 清理当前页面参数（Composable） |
+| Method | Description |
+|--------|-------------|
+| `Nav.to()` | Navigate to specified page |
+| `Nav.back()` | Navigate back |
+| `Nav.replace()` | Replace current page |
+| `Nav.offAllTo()` | Clear stack and navigate |
+| `Nav.getParams<T>()` | Get current page parameters (Composable) |
+| `Nav.getResultFor<T>(destination)` | Get return result from specified page (Composable) |
+| `Nav.clearCurrentData()` | Clear current page parameters (Composable) |
 
-### NavGraphBuilder 扩展
+### NavGraphBuilder Extensions
 
-| 函数 | 说明 |
-|------|------|
-| `composableWithDestination()` | 注册页面路由 |
-| `dialogWithDestination()` | 注册对话框路由 |
+| Function | Description |
+|----------|-------------|
+| `composableWithDestination()` | Register page route |
+| `dialogWithDestination()` | Register dialog route |
 
-### 完整 API 签名
+### Complete API Signatures
 
 #### to()
 
@@ -522,43 +522,43 @@ fun NavGraphBuilder.dialogWithDestination(
 )
 ```
 
-## ❓ 常见问题
+## ❓ FAQ
 
-### Q: 为什么不需要序列化？
+### Q: Why is serialization not needed?
 
-A: 参数直接存储在内存的 `ConcurrentHashMap` 中，通过 UUID 作为 key 关联。这种方式避免了序列化开销，同时支持传递任意 Kotlin 对象。
+A: Parameters are stored directly in a `ConcurrentHashMap` in memory, associated via UUID as the key. This approach avoids serialization overhead while supporting passing any Kotlin object.
 
-### Q: 内存会泄漏吗？
+### Q: Will memory leak?
 
-A: 不会。系统会在页面销毁时自动清理导航参数，无需手动管理。当页面从导航栈中移除时，对应的数据会自动从内存中删除。
+A: No. The system automatically cleans up navigation parameters when pages are destroyed, no manual management needed. When a page is removed from the navigation stack, the corresponding data is automatically deleted from memory.
 
-### Q: 可以传递 Lambda 吗？
+### Q: Can I pass Lambdas?
 
-A: 可以！由于数据存储在内存中，可以传递任何可以在内存中持有的对象，包括 Lambda、回调等。
+A: Yes! Since data is stored in memory, you can pass any object that can be held in memory, including Lambdas, callbacks, etc.
 
-### Q: 支持深链接吗？
+### Q: Does it support deep links?
 
-A: 支持。在 `composableWithDestination` 中传入 `deepLinks` 参数即可。
+A: Yes. Just pass the `deepLinks` parameter in `composableWithDestination`.
 
-## 🔗 相关链接
+## 🔗 Related Links
 
 - **Maven Central**: https://central.sonatype.com/artifact/com.kajlee/tnav
 - **GitHub**: https://github.com/KaJInL/tnav
 
-## 📄 许可证
+## 📄 License
 
 Apache License 2.0
 
-**重要提示**：使用本库时，**必须**在您的项目中注明使用了 TNav 库，并保留原始版权声明。您可以在以下位置添加说明：
+**Important Notice**: When using this library, you **must** indicate in your project that you are using the TNav library and retain the original copyright notice. You can add this notice in the following locations:
 
-- 项目的 README.md 文件中
-- 应用的"关于"页面
-- 开源项目的 LICENSE 文件中
+- In your project's README.md file
+- In your app's "About" page
+- In your open source project's LICENSE file
 
-示例：
+Example:
 
 ```
-本项目使用了 TNav 导航库
+This project uses the TNav navigation library
 TNav - https://github.com/KaJInL/tnav
 Copyright (c) 2024 Kajin
 ```
@@ -580,3 +580,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
