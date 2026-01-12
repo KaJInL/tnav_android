@@ -77,7 +77,7 @@ afterEvaluate {
                 
                 groupId = "com.kajlee"
                 artifactId = "tnav"
-                version = "0.0.1"
+                version = "0.0.2"
 
                 artifact(dokkaJavadocJar.get())
 
@@ -93,7 +93,7 @@ afterEvaluate {
                     }
                     developers {
                         developer {
-                            id.set("kajinl")
+                            id.set("kajlee")
                             name.set("Kajin")
                             email.set("1215302367@qq.com")
                         }

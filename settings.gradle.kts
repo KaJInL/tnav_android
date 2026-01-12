@@ -15,11 +15,12 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
-        mavenCentral()  // 优先使用中央仓库
-        // mavenLocal() 已移除，确保从中央仓库获取依赖
+        mavenLocal()  // 优先使用本地Maven仓库，用于本地依赖
+        mavenCentral()
     }
 }
 
 rootProject.name = "tnav_android"
 include(":app")
+include(":tnav")
  
