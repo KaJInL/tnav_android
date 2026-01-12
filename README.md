@@ -12,6 +12,7 @@
 - ✅ **无序列化开销**：参数直接存储在内存中，无需 JSON 序列化/反序列化
 - ✅ **类型安全**：使用 Kotlin 泛型确保类型安全
 - ✅ **简洁 API**：页面无需传递 `NavBackStackEntry` 参数
+- ✅ **链式调用**：支持 `map`、`filter`、`unwrapOr` 等函数式操作符
 - ✅ **支持任意对象**：可以传递任何 Kotlin 对象，包括 sealed class、Lambda 等
 - ✅ **自动内存管理**：页面销毁时自动清理参数，无需手动管理
 - ✅ **丰富的动画效果**：提供多种预设动画，支持自定义动画
@@ -165,6 +166,97 @@ Nav.to(GlobalDes.Main, isSingleTop = true)
 
 ### 参数传递
 
+#### 链式调用 API（推荐）
+
+TNav 提供了链式调用的参数处理 API，支持 `map`、`filter`、`unwrapOr` 等操作符。
+
+**重要说明**：链式调用 API 返回的是 `MutableState<T>`，支持 Compose 的 `by` 委托语法，可以自动触发重组。
+
+```kotlin
+@Composable
+fun UserDetailScreen() {
+    // ===== val vs var 的选择 =====
+    // val：只读访问，不需要修改参数时使用
+    // var：可变访问，需要在页面中修改参数时使用（推荐！）
+    
+    // 1️⃣ 使用 val（只读）- 仅用于展示，不需要修改
+    // unwrapOr() 返回 MutableState<UserInfo>，通过 by 委托获取值
+    val userInfo by Nav.param<UserInfo>().unwrapOr(defaultUser)
+    Text("用户名：${userInfo.name}")  // ✅ 只读访问
+    // userInfo = newUser  // ❌ 编译错误：val 不能重新赋值
+    
+    // 2️⃣ 使用 var（可变）- 页面需要修改参数时使用 ⭐️推荐
+    // 大多数实际场景都需要修改参数（表单编辑、状态更新等）
+    var mutableUser by Nav.param<UserInfo>().unwrapOr(defaultUser)
+    
+    // ✅ 可以重新赋值，会触发 Compose 重组，UI 自动更新
+    Button(onClick = { mutableUser = newUser }) {
+        Text("更新用户信息")
+    }
+    
+    // ✅ 可以修改属性（如果是 data class 的 copy）
+    Button(onClick = { 
+        mutableUser = mutableUser.copy(name = "新名字") 
+    }) {
+        Text("修改名字")
+    }
+    
+    // 3️⃣ var 的实际应用场景示例
+    // 场景1：表单编辑
+    var formData by Nav.param<FormData>().unwrapOr(FormData())
+    TextField(
+        value = formData.email,
+        onValueChange = { formData = formData.copy(email = it) }
+    )
+    
+    // 场景2：计数器/状态管理
+    var count by Nav.param<Int>().unwrapOr(0)
+    Button(onClick = { count++ }) { Text("点击：$count") }
+    
+    // 场景3：切换状态
+    var isEnabled by Nav.param<Boolean>().unwrapOr(false)
+    Switch(checked = isEnabled, onCheckedChange = { isEnabled = it })
+    
+    // 4️⃣ 使用 map 转换（通常用 val，因为转换后的值一般不直接修改）
+    val userName by Nav.param<UserInfo>().map { it.name }.unwrapOr("未知")
+    
+    // 5️⃣ 使用 filter 过滤
+    val adultUser by Nav.param<UserInfo>()
+        .filter { it.age >= 18 }
+        .unwrapOr(defaultUser)
+    
+    // 6️⃣ 链式调用多个操作
+    val vipUserName by Nav.param<UserInfo>()
+        .filter { it.age >= 18 }
+        .filter { it.isVip }
+        .map { it.name }
+        .unwrapOr("非 VIP")
+        
+    // 7️⃣ 使用 orNull 获取可空值（var 也适用）
+    var nullableUser by Nav.param<UserInfo>().orNull()
+    
+    // 8️⃣ 使用 unwrapOrElse 延迟计算默认值
+    val user by Nav.param<UserInfo>().unwrapOrElse { createDefaultUser() }
+}
+```
+
+**可用的操作符：**
+
+| 操作符 | 说明 | 返回类型 |
+|-------|------|---------|
+| `map { }` | 转换参数值 | `ParamDelegate<U>` |
+| `filter { }` | 过滤参数值，不满足条件则返回空 | `ParamDelegate<T>` |
+| `unwrapOr(default)` | 解包，如果为空则使用默认值 | `MutableState<T>` |
+| `unwrapOrElse { }` | 解包，如果为空则调用函数获取默认值 | `MutableState<T>` |
+| `orNull()` | 获取可空值 | `MutableState<T?>` |
+| `asParam()` | 获取 Param 包装 | `MutableState<Param<T>>` |
+
+**State 特性：**
+- 所有终结操作（`unwrapOr`、`orNull` 等）都返回 `MutableState`
+- 支持 Compose 的 `by` 委托语法
+- 值的变化会自动触发 UI 重组
+- 支持读取和写入（使用 `var` 委托时）
+
 #### 基本对象传递
 
 ```kotlin
@@ -240,6 +332,8 @@ fun ResultScreen() {
 
 ### 返回结果
 
+#### 基本用法
+
 ```kotlin
 // ========== 步骤1: 定义结果数据类 ==========
 data class SelectResult(
@@ -274,6 +368,44 @@ fun SelectionListScreen() {
     }) {
         Text("选项一")
     }
+}
+```
+
+#### 链式调用处理返回结果（推荐）
+
+使用链式调用 API 处理返回结果更加灵活。返回的是 `MutableState`，会自动监听结果变化并触发 UI 重组。
+
+```kotlin
+@Composable
+fun MainScreen() {
+    // 基本用法：返回 MutableState<User>
+    // 当目标页面返回结果时，selectedUser 会自动更新，UI 会重新渲染
+    val selectedUser by Nav.result<User>(GlobalDes.SelectUser).unwrapOr(defaultUser)
+    
+    // 使用 map 转换：返回 MutableState<String>
+    val userName by Nav.result<User>(GlobalDes.SelectUser)
+        .map { it.name }
+        .unwrapOr("未选择")
+    
+    // 使用 filter 过滤：返回 MutableState<User>
+    val vipUser by Nav.result<User>(GlobalDes.SelectUser)
+        .filter { it.isVip }
+        .unwrapOr(defaultUser)
+        
+    // 链式调用多个操作：返回 MutableState<String>
+    val vipUserName by Nav.result<User>(GlobalDes.SelectUser)
+        .filter { it.isVip }
+        .map { it.name }
+        .unwrapOr("无 VIP 用户")
+        
+    // 使用 orNull 获取可空结果：返回 MutableState<SelectResult?>
+    val nullableResult by Nav.result<SelectResult>(GlobalDes.Selection).orNull()
+    nullableResult?.let { result ->
+        Text("选择了: ${result.selectedName}")
+    }
+    
+    // 显示选中的用户信息（会随着返回结果自动更新）
+    Text("当前用户: ${selectedUser.name}")
 }
 ```
 
@@ -426,15 +558,30 @@ composableWithDestination(
 
 ### Nav 对象
 
+#### 导航方法
+
 | 方法 | 说明 |
 |------|------|
 | `Nav.to()` | 导航到指定页面 |
 | `Nav.back()` | 返回上一页 |
 | `Nav.replace()` | 替换当前页面 |
 | `Nav.offAllTo()` | 清空栈并跳转 |
+
+#### 参数获取方法（传统 API）
+
+| 方法 | 说明 |
+|------|------|
 | `Nav.getParams<T>()` | 获取当前页面参数（Composable） |
 | `Nav.getResultFor<T>(destination)` | 获取指定页面的返回结果（Composable） |
 | `Nav.clearCurrentData()` | 清理当前页面参数（Composable） |
+
+#### 参数获取方法（链式 API，推荐）
+
+| 方法 | 说明 |
+|------|------|
+| `Nav.param<T>()` | 获取参数委托，支持链式调用（Composable） |
+| `Nav.data<T>()` | 同 `param()`，别名方法（Composable） |
+| `Nav.result<T>(destination)` | 获取返回结果委托，支持链式调用（Composable） |
 
 ### NavGraphBuilder 扩展
 
@@ -499,6 +646,30 @@ fun <T> getParams(): T?
 @Composable
 fun <T> getResultFor(destination: Destination): T?
 ```
+
+#### param()
+
+```kotlin
+@Composable
+inline fun <reified T> Nav.param(): ParamDelegate<T>
+```
+
+返回 `ParamDelegate`，支持以下链式操作：
+- `map { }`: 转换参数值
+- `filter { }`: 过滤参数值
+- `unwrapOr(default)`: 解包并提供默认值
+- `unwrapOrElse { }`: 延迟计算默认值
+- `orNull()`: 获取可空值
+- `asParam()`: 获取 Param 包装
+
+#### result()
+
+```kotlin
+@Composable
+inline fun <reified T> Nav.result(destination: Destination): ResultDelegate<T>
+```
+
+返回 `ResultDelegate`，支持与 `ParamDelegate` 相同的链式操作。
 
 #### composableWithDestination()
 
